@@ -1,0 +1,30 @@
+{
+  "name": "transport-admin-ba",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cream124/transport-admin-ba.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cream124/transport-admin-ba/issues"
+  },
+  "homepage": "https://github.com/cream124/transport-admin-ba#readme",
+  "dependencies": {
+    "@apollo/server": "^5.1.0",
+    "apollo-server": "^3.13.0",
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "graphql": "^16.11.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.19.2"
+  }
+}
