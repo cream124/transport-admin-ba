@@ -11,6 +11,7 @@ export const typeDefs = gql`
     id: ID!
     name: String!
     email: String!
+    role: String! # "admin" or "user"
   }
 
   type AuthPayload {
@@ -29,14 +30,22 @@ export const typeDefs = gql`
     email: String!
     password: String!
   }
+  input UpdateUserInput {
+    id: ID!
+    name: String
+    email: String
+  }
 
   type Query {
     validateToken: User
+    users: [User!]!
   }
 
   type Mutation {
     registerUser(input: RegisterInput!): AuthPayload!
     loginUser(input: LoginInput!): AuthPayload!
+    updateUser(input: UpdateUserInput!): User!
+    deleteUser(id: ID!): Boolean!
   }
 `;
 
@@ -45,6 +54,9 @@ export const resolvers = {
     validateToken: async (_, __, { user }) => {
       if (!user) throw new Error("Not authenticated");
       return await User.findById(user.id);
+    },
+    users: async (_, __) => {
+      return await User.find();
     },
   },
 
@@ -56,7 +68,7 @@ export const resolvers = {
       if (existing) throw new Error("Email already registered");
 
       const hashed = await bcrypt.hash(password, 10);
-      const user = await User.create({ name, email, password: hashed });
+      const user = await User.create({ name, email, password: hashed, role: "user" });
 
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
         expiresIn: "7d",
@@ -78,6 +90,25 @@ export const resolvers = {
       });
 
       return { token, user };
+    },
+
+    updateUser: async (_, { input }) => {
+      const { id, name, email } = input;
+      
+     
+      const existing = await User.findOne({ _id });
+      if (!existing) throw new Error("The user not exited");
+      await User.updateOne({_id},
+        {
+          $set: {name, email}
+        });
+      return await User.findOne({id});
+    },
+
+    deleteUser: async (_, { id }) => {
+      const existing = await User.findOne({ id });
+      if (!existing) throw new Error("The user not exited");
+      return await User.deleteOne({id});
     },
   },
 };
