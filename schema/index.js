@@ -1,5 +1,4 @@
 import { gql } from "apollo-server";
-// import { gql } from "graphql-tag";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
@@ -45,7 +44,7 @@ export const typeDefs = gql`
     registerUser(input: RegisterInput!): AuthPayload!
     loginUser(input: LoginInput!): AuthPayload!
     updateUser(input: UpdateUserInput!): User!
-    deleteUser(id: ID!): Boolean!
+    deleteUser(id: ID): Boolean!
   }
 `;
 
@@ -92,23 +91,23 @@ export const resolvers = {
       return { token, user };
     },
 
-    updateUser: async (_, { input }) => {
+    updateUser: async (_, { input}) => {
       const { id, name, email } = input;
-      
-     
-      const existing = await User.findOne({ _id });
+      const existing = await User.findById(id);
+
       if (!existing) throw new Error("The user not exited");
-      await User.updateOne({_id},
+      await User.updateOne({_id:id},
         {
           $set: {name, email}
         });
-      return await User.findOne({id});
+      return await User.findById(id);
     },
 
     deleteUser: async (_, { id }) => {
-      const existing = await User.findOne({ id });
+      const existing = await User.findById(id);
       if (!existing) throw new Error("The user not exited");
-      return await User.deleteOne({id});
+      const ss = await User.deleteOne({_id: id});
+      return ss.acknowledged;
     },
   },
 };

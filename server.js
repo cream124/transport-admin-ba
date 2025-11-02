@@ -3,9 +3,14 @@ import { startStandaloneServer } from "@apollo/server/standalone";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { typeDefs, resolvers } from "./schema/index.js";
+// import { typeDefs, resolvers } from "./schema/index.js";
+// import { typeDefs as typeDefsBus, resolvers as resolversBus } from "./schema/busschema.js";
+
+import {typeDefs} from "./schema/typeDefs.js";
+import {resolvers} from "./schema/resolvers.js";
 
 dotenv.config();
+
 
 // Connect to MongoDB
 await mongoose
