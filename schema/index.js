@@ -10,7 +10,7 @@ export const typeDefs = gql`
     id: ID!
     name: String!
     email: String!
-    role: String! # "admin" or "user"
+    role: String # "admin" or "user"
   }
 
   type AuthPayload {
@@ -33,6 +33,7 @@ export const typeDefs = gql`
     id: ID!
     name: String
     email: String
+    role: String
   }
 
   type Query {
@@ -92,13 +93,13 @@ export const resolvers = {
     },
 
     updateUser: async (_, { input}) => {
-      const { id, name, email } = input;
+      const { id, name, email, role} = input;
       const existing = await User.findById(id);
-
+      console.log("-------------------",existing);
       if (!existing) throw new Error("The user not exited");
       await User.updateOne({_id:id},
         {
-          $set: {name, email}
+          $set: {name, email, role}
         });
       return await User.findById(id);
     },
