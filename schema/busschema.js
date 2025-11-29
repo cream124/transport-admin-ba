@@ -1,5 +1,6 @@
 import { gql } from "apollo-server-express";
 import Bus from "../models/Bus.js";
+import { getOwnerNameById } from "./owner/ownersFunctions.js";
 
 export const typeDefs = gql`
   type Bus {
@@ -9,6 +10,7 @@ export const typeDefs = gql`
     owner: String!
     numberOfSeats: Int!
     status: String!
+    ownerName: String
   }
 
   input BusInput {
@@ -36,9 +38,13 @@ export const resolvers = {
     buses: async () => await Bus.find(),
     bus: async (_, { id }) => await Bus.findById(id),
   },
+  Bus: {
+    ownerName: async (parent) => {
+      return getOwnerNameById(parent.owner);
+    }
+  },
   Mutation: {
     createBus: async (_, { input }) => {
-        console.log('----input-----', input)
       const newBus = new Bus(input);
       return await newBus.save();
     },
